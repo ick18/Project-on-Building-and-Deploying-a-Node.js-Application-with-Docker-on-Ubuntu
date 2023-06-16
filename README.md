@@ -151,62 +151,78 @@ There are many stages like Checkout, Build, Test, Push and Deploy
 In a Jenkins pipeline, the "checkout" stage is used to fetch the source code from a version control system (VCS) such as Git, Subversion, or Mercurial.
 In Pipeline, in agent section we have to mention our agent node name like Dev-Agent node.
 pipeline {
-    	agent { label 'Dev-Agent node' }
-    	stages{
-        	stage('Checkout'){
-            	steps{
-git url: 'https://github.com/Basanagoudapatil02/Project-on-Building-and-Deploying-a-Node.js-Application-with-Docker-on-Ubuntu.git', branch: 'master' 
-            	}
+    agent { label 'dev' }
+
+    stages {
+        stage('Git Clone') {
+            steps {
+                git url: 'https://github.com/Tharun4153/Project-on-Building_and_Deploying-a-Node.js-Application-with-Docker-on-Ubuntu.git',
+                                branch: 'master'
+            }
         }
+
+
+
 2.	Build Stage 
 In a Jenkins pipeline, the "Build" stage is typically the first stage in the pipeline, and it is responsible for building the source code.
 The "Build" stage can include any necessary steps to compile the code, package it into a deployable format, and perform any other necessary preparation tasks.
 Here in this stage, I am building a docker image using docker file through command and tagging image with basanagoudapatil/nodo-todo-app-test:latest'
 Note: Install docker and docker compose in Jenkins Master-Node.
-        stage('Build’){
+
+stage('Build'){
             steps{
-                sh 'docker build . -t basanagoudapatil/nodo-todo-app-test:latest'
+                sh 'docker build . -t tharun4153/nodo-todo-app-test:latest'
             }
         }
+
 
 3.	Test Stage
 In a Jenkins pipeline, the "Test" stage is typically the second stage in the pipeline, and it is responsible for running tests to verify the correctness of the built code.
 The "Test" stage can include any necessary steps to execute the tests and generate test reports.
 Here in this stage, I am testing docker image by executing command 
-docker inspect --type=image basanagoudapatil/nodo-todo-app-test:latest
-        stage('Test image') {
+docker inspect --type=image tharun4153/nodo-todo-app-test:latest
+
+stage('Test image') {
             steps {
-                echo 'testing...'
-                sh 'docker inspect --type=image basanagoudapatil/nodo-todo-app-test:latest '
+                echo 'testing…'
+                sh 'docker image inspect tharun4153/nodo-todo-app-test:latest'
             }
         }
+
 4.	Push Stage
 In this stage, I am pushing docker image to my Dockerhub public repository and for dockerHub password I have generated separated dockerhub token. 
-           stage('Push'){
-     steps{
-        	     sh "sudo docker login -u basanagoudapatil -p dckr_pat_OvN0lH_USJztUCkm0opyjz-yXNc"
-                   sh 'sudo docker push basanagoudapatil/nodo-todo-app-test:latest'
-            }
-    }  
+
+stage('Push') {
+                        steps{
+                                sh "sudo docker login -u tharun4153 -p dckr_pat_rawtlhzz29-r4dLjfGCQLhXBrkM"
+                                sh 'sudo docker push tharun4153/nodo-todo-app-test:latest'
+                        }
+                }
+
+
 5.	Deploy Stage
 In a Jenkins pipeline, the "Deploy" stage is typically the final stage in the pipeline, and it is responsible for deploying the built and tested artifacts to a target environment.
 The "Deploy" stage can include any necessary steps to deploy the built artifacts to a target environment, such as a production server or a container registry.
 Here in this stage, I am building docker compose and deploying to another server using SSH command.
-        stage('Deploy'){
+
+stage('Deploy') {
             steps{
-                echo 'deploying on another server'
-                sh 'sudo docker stop nodetodoapp || true'
-                sh 'sudo docker rm nodetodoapp || true'
-                sh 'sudo docker run -d --name nodetodoapp -p 8000:8000 basanagoudapatil/nodo-todo-app-test:latest'
-                sh '''
-                ssh -i Ubuntudemo.pem -o StrictHostKeyChecking=no ubuntu@44.211.144.201 <<EOF
-                sudo docker login -u basanagoudapatil -p dckr_pat_OvN0lH_USJztUCkm0opyjz-yXNc
-                sudo docker pull basanagoudapatil/nodo-todo-app-test:latest
-                sudo docker stop nodetodoapp || true
-                sudo docker rm nodetodoapp || true 
-                sudo docker run -d --name nodetodoapp -p 8000:8000 basanagoudapatil/nodo-todo-app-test:latest
-                '''
-            }
+                                echo 'deploying on another server'
+                                sh 'sudo docker stop nodetodoapp || true'
+                                sh 'sudo docker rm nodetodoapp || true'
+                                sh 'sudo docker run -d --name nodetodoapp -p 8000:8000 tharun4153/nodo-todo-app-test:latest'
+                                sshagent(credentials: ['10.0.0.41']) {
+                                sh '''
+                                        ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.41 <<EOF
+                                        sudo docker login -u tharun4153 -p dckr_pat_rawtlhzz29-r4dLjfGCQLhXBrkM
+                                        sudo docker pull tharun4153/nodo-todo-app-test:latest
+                                        sudo docker stop nodetodoapp || true
+                                        sudo docker rm nodetodoapp || true
+                                        sudo docker run -d --name nodetodoapp -p 8000:8000 tharun4153/nodo-todo-app-test:latest
+                                                        '''
+
+                        }
+                }
         }
 
 Final pipeline script
