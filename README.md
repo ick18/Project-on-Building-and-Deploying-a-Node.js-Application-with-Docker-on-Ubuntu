@@ -205,6 +205,7 @@ In a Jenkins pipeline, the "Deploy" stage is typically the final stage in the pi
 The "Deploy" stage can include any necessary steps to deploy the built artifacts to a target environment, such as a production server or a container registry.
 Here in this stage, I am building docker compose and deploying to another server using SSH command.
 
+	
 stage('Deploy') {
             steps{
                                 echo 'deploying on another server'
@@ -225,6 +226,8 @@ stage('Deploy') {
         }
 
 Final pipeline script
+
+	
 pipeline {
     agent { label 'dev' }
         
