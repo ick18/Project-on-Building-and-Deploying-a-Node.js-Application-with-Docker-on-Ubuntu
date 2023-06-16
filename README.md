@@ -228,7 +228,7 @@ stage('Deploy') {
 Final pipeline script
 
 	
-pipeline {
+ pipeline {
     agent { label 'dev' }
         
     stages {
