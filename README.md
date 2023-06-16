@@ -211,51 +211,54 @@ Here in this stage, I am building docker compose and deploying to another server
 
 Final pipeline script
 pipeline {
-    agent { label 'Dev-Agent node' }
-    
-    stages{
-        stage('Checkout'){
-            steps{
-                git url: 'https://github.com/Basanagoudapatil02/Project-on-Building-and-Deploying-a-Node.js-Application-with-Docker-on-Ubuntu.git', branch: 'master'
+    agent { label 'dev' }
+        
+    stages {
+        stage('Git Clone') {
+            steps {
+                git url: 'https://github.com/Tharun4153/Project-on-Building_and_Deploying-a-Node.js-Application-with-Docker-on-Ubuntu.git',
+				branch: 'master'
             }
         }
         stage('Build'){
             steps{
-                sh 'sudo docker build . -t basanagoudapatil/nodo-todo-app-test:latest'
+                sh 'docker build . -t tharun4153/nodo-todo-app-test:latest'
             }
         }
         stage('Test image') {
             steps {
-                echo 'testing...'
-                sh 'sudo docker inspect --type=image basanagoudapatil/nodo-todo-app-test:latest '
+                echo 'testing…'
+                sh 'docker image inspect tharun4153/nodo-todo-app-test:latest'
             }
         }
-        
-        stage('Push'){
+        stage('Push') {
+			steps{
+				sh "sudo docker login -u tharun4153 -p dckr_pat_rawtlhzz29-r4dLjfGCQLhXBrkM"
+				sh 'sudo docker push tharun4153/nodo-todo-app-test:latest'
+			}
+		}
+		stage('Deploy') {
             steps{
-        	     sh "sudo docker login -u basanagoudapatil -p dckr_pat_OvN0lH_USJztUCkm0opyjz-yXNc"
-                 sh 'sudo docker push basanagoudapatil/nodo-todo-app-test:latest'
-            }
-        }  
-        stage('Deploy'){
-            steps{
-                echo 'deploying on another server'
-                sh 'sudo docker stop nodetodoapp || true'
-                sh 'sudo docker rm nodetodoapp || true'
-                sh 'sudo docker run -d --name nodetodoapp -p 80:80  basanagoudapatil/nodo-todo-app-test:latest'
-                sh '''
-                ssh -i Ubuntudemo.pem -o StrictHostKeyChecking=no ubuntu@44.211.144.201 <<EOF
-                sudo docker login -u basanagoudapatil -p dckr_pat_OvN0lH_USJztUCkm0opyjz-yXNc
-                sudo docker pull basanagoudapatil/nodo-todo-app-test:latest
-                sudo docker stop nodetodoapp || true
-                sudo docker rm nodetodoapp || true 
-                sudo docker run -d --name nodetodoapp -p 8000:8000 basanagoudapatil/nodo-todo-app-test:latest
-                '''
-            }
+				echo 'deploying on another server'
+				sh 'sudo docker stop nodetodoapp || true'
+				sh 'sudo docker rm nodetodoapp || true'
+				sh 'sudo docker run -d --name nodetodoapp -p 8000:8000 tharun4153/nodo-todo-app-test:latest'
+				sshagent(credentials: ['10.0.0.41']) {
+				sh '''
+					ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.41 <<EOF
+					sudo docker login -u tharun4153 -p dckr_pat_rawtlhzz29-r4dLjfGCQLhXBrkM
+					sudo docker pull tharun4153/nodo-todo-app-test:latest
+					sudo docker stop nodetodoapp || true
+					sudo docker rm nodetodoapp || true
+					sudo docker run -d --name nodetodoapp -p 8000:8000 tharun4153/nodo-todo-app-test:latest
+                					'''
+                		    
+			}    
+		}
         }
+
     }
 }
-
  ![image](https://github.com/Basanagoudapatil02/Project-on-Building-and-Deploying-a-Node.js-Application-with-Docker-on-Ubuntu/assets/63364609/e2f193fa-0921-400d-919c-2def93619ce1)
 
  
