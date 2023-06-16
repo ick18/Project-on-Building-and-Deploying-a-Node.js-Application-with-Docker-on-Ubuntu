@@ -219,9 +219,8 @@ stage('Deploy') {
                                         sudo docker stop nodetodoapp || true
                                         sudo docker rm nodetodoapp || true
                                         sudo docker run -d --name nodetodoapp -p 8000:8000 tharun4153/nodo-todo-app-test:latest
-                                                        '''
-
-                        }
+                                               '''
+                       }
                 }
         }
 
