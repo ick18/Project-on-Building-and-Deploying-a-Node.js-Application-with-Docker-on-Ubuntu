@@ -1,37 +1,97 @@
 <!DOCTYPE html>
-
 <html>
 
-    <head>
-        <title>My todolist</title>
-        <style>
-            a {
-                text-decoration: none;
-                color: black;
-            }
+<head>
+    <title>My Shaandaar Todolist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
 
-        </style>
-    </head>
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    <body>
-        <h1>Nodo Todo App </h1>
-        <ul>
-            <% todolist.forEach(function(todo, index) { %>
-            <li>
-                <a href="/todo/delete/<%= index %>">✘</a>
-                <a href="/todo/<%= index %>">✎</a>
-                <%- todo %>
-            </li>
-            <% }); %>
-        </ul>
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
 
-        <form action="/todo/add/" method="post">
-            <p>
-                <label for="newtodo">What shoud I do?</label>
-                <input type="text" name="newtodo" id="newtodo" autofocus />
-                <input type="submit" value="Add" />
-            </p>
-        </form>
-    </body>
+        li {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        li a {
+            margin-right: 10px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            color: #ff0000;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            padding: 8px 16px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Tharun Tej Friends List</h1>
+    <ul>
+        <% todolist.forEach(function(todo, index) { %>
+        <li>
+            <a href="/todo/delete/<%= index %>">✘</a>
+            <a href="/todo/<%= index %>">✎</a>
+            <%- todo %>
+        </li>
+        <% }); %>
+    </ul>
+
+    <form action="/todo/add/" method="post">
+        <p>
+            <label for="newtodo">What should I do?</label>
+            <input type="text" name="newtodo" id="newtodo" autofocus />
+            <input type="submit" value="Add" />
+        </p>
+    </form>
+</body>
 
 </html>
