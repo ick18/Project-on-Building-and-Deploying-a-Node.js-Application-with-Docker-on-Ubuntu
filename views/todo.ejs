@@ -2,11 +2,12 @@
 <html>
 
 <head>
-    <title>My Shaandaar Todolist</title>
+    <title>SONIX PAGE</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5)), url("https://wallpapercave.com/wp/wp2874367.jpg");
+            background-size: cover;
             color: #333;
             margin: 0;
             padding: 20px;
@@ -23,7 +24,7 @@
         }
 
         li {
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
@@ -43,6 +44,9 @@
 
         form {
             margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
         }
 
         label {
@@ -60,7 +64,7 @@
 
         input[type="submit"] {
             padding: 8px 16px;
-            background-color: #4caf50;
+            background-color: rgba(0, 128, 0, 0.8);
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -68,13 +72,13 @@
         }
 
         input[type="submit"]:hover {
-            background-color: #45a049;
+            background-color: rgba(0, 128, 0, 0.6);
         }
     </style>
 </head>
 
 <body>
-    <h1>Tharun Tej Friends List</h1>
+    <h1>SONIX Friends List</h1>
     <ul>
         <% todolist.forEach(function(todo, index) { %>
         <li>
@@ -87,7 +91,7 @@
 
     <form action="/todo/add/" method="post">
         <p>
-            <label for="newtodo">What should I do?</label>
+            <label for="newtodo">ADD Friends?</label>
             <input type="text" name="newtodo" id="newtodo" autofocus />
             <input type="submit" value="Add" />
         </p>
